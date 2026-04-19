@@ -55,14 +55,16 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     implementation fg.deobf("curse.maven:macabre-933001:6442644")
-    // Macabre dimension compatibility test pack dependencies.
-    implementation fg.deobf("curse.maven:echelon-linggango-variant-1401279:7832714")
-    implementation fg.deobf("curse.maven:placebo-283644:6274231")
-    implementation fg.deobf("curse.maven:apothic-attributes-898963:5634071")
-    implementation fg.deobf("curse.maven:lionfish-api-1001614:5922047")
-    implementation fg.deobf("curse.maven:clothapi-348521:5729105")
-    implementation fg.deobf("curse.maven:bettercombat-639842:5625757")
-    implementation fg.deobf("curse.maven:citadel-331936:6702068")
+
+    // Macabre dimension compatibility test pack dependencies. These are runtime-only so
+    // clean CI builds do not need to resolve the whole local test modpack to compile.
+    runtimeOnly fg.deobf("curse.maven:echelon-linggango-variant-1401279:7832714")
+    runtimeOnly fg.deobf("curse.maven:placebo-283644:6274231")
+    runtimeOnly fg.deobf("curse.maven:apothic-attributes-898963:5634071")
+    runtimeOnly fg.deobf("curse.maven:lionfish-api-1001614:5922047")
+    runtimeOnly fg.deobf("curse.maven:clothapi-348521:5729105")
+    runtimeOnly fg.deobf("curse.maven:bettercombat-639842:5625757")
+    runtimeOnly fg.deobf("curse.maven:citadel-331936:6702068")
 
     runtimeOnly fg.deobf("curse.maven:curios-309927:6418456")
     runtimeOnly fg.deobf("curse.maven:patchouli-306770:6164575")
@@ -70,15 +72,11 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:armageddon-1110642:7142556")
     runtimeOnly fg.deobf("curse.maven:attributefix-280510:4911084")
     runtimeOnly fg.deobf("curse.maven:geckolib-388172:7553267")
-    compileOnly fg.deobf("curse.maven:geckolib-388172:7553267")
     runtimeOnly fg.deobf("curse.maven:tooltipoverhaul-1327508:7096296")
     runtimeOnly fg.deobf("curse.maven:obscureAPI-638417:7171906")
     runtimeOnly fg.deobf("curse.maven:fancy-toasts-1326436:7302363")
     runtimeOnly fg.deobf("curse.maven:terramity-1084134:6054971")
     runtimeOnly fg.deobf("curse.maven:lethality-a-terramity-addon-1282036:7332696")
-    compileOnly fg.deobf("curse.maven:tooltipoverhaul-1327508:7096296")
-    compileOnly fg.deobf("curse.maven:obscureAPI-638417:7171906")
-    compileOnly fg.deobf("curse.maven:jei-238222:7391695")
     runtimeOnly fg.deobf("curse.maven:playerAnimator-658587:4587214")
     runtimeOnly fg.deobf("curse.maven:ironsspells-855414:7552907")
     runtimeOnly fg.deobf("curse.maven:tosmagic-1046916:7424522")
@@ -93,8 +91,6 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:gtbcs-geomancy-plus-1352485:7580390")
     runtimeOnly fg.deobf("curse.maven:gtbcs-spelllib-1194714:7584987")
     runtimeOnly fg.deobf("curse.maven:mowzies-mobs-250498:6586086")
-    compileOnly fg.deobf("curse.maven:emi-580555:6420945")
-    compileOnly fg.deobf("curse.maven:ars-nouveau-401955:6688854")
     runtimeOnly fg.deobf("curse.maven:selene-499980:5454157")
     runtimeOnly fg.deobf("curse.maven:lendercataclysm-551586:6906993")
     runtimeOnly fg.deobf("curse.maven:alexscaves-924854:5848216")
@@ -103,7 +99,6 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:eeeabs-mobs-921600:6095880")
     runtimeOnly fg.deobf("curse.maven:adams-ars-plus-1011093:7461849")
     runtimeOnly fg.deobf("curse.maven:worldedit-225608:4586218")
-    compileOnly fg.deobf("curse.maven:worldedit-225608:4586218")
     runtimeOnly fg.deobf("curse.maven:advanced-bow-enchantments-1480562:7782723")
     runtimeOnly fg.deobf("curse.maven:enchanting-infuser-551151:5528724")
     runtimeOnly fg.deobf("curse.maven:puzzles-lib-495476:6918565")
