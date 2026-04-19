@@ -36,17 +36,6 @@ On Unix-like shells:
 ```text
 src/main/java/com/doug/macabrefix/       Minimal Forge mod stubs
 src/main/resources/                      Forge metadata and mod assets
-docs/                                    Project guides and working notes
-reference/upstream/macabre/              Local upstream Macabre reference notes and placeholders
 ```
 
-Upstream reference jars belong in `reference/upstream/macabre/` for local inspection only and are ignored by Git. Treat anything in that folder as reference-only.
-
-## Docs
-
-- [Codex Guide](docs/CODEX_GUIDE.md)
-- [Blueprint](docs/BLUEPRINT.md)
-- [Upstream Reference](docs/UPSTREAM_REFERENCE.md)
-- [File Tree](docs/FILE_TREE.md)
-- [Tasks](docs/TASKS.md)
-- [Test Plan](docs/TEST_PLAN.md)
+Local development notes and upstream reference jars can live under `docs/` and `reference/`; both folders are ignored by Git.

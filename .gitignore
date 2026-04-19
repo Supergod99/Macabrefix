@@ -15,8 +15,9 @@ debug.log
 # Generated local repositories
 mcmodsrepo/
 
-# Reference jars are local inspection inputs, not source.
-reference/**/*.jar
+# Local development notes and reference inputs
+docs/
+reference/
 
 # IntelliJ IDEA
 .idea/
