@@ -1,0 +1,184 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', layout.buildDirectory.file('createSrgToMcp/output.srg').get().asFile.absolutePath
+            arg "-mixin.config=${mod_id}.mixins.json"
+
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+        }
+
+        server {
+            args '--nogui'
+        }
+    }
+}
+
+repositories {
+    maven {
+        name = 'CurseMaven'
+        url = 'https://cursemaven.com'
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    implementation fg.deobf("curse.maven:macabre-933001:6442644")
+    // Macabre dimension compatibility test pack dependencies.
+    implementation fg.deobf("curse.maven:echelon-linggango-variant-1401279:7832714")
+    implementation fg.deobf("curse.maven:placebo-283644:6274231")
+    implementation fg.deobf("curse.maven:apothic-attributes-898963:5634071")
+    implementation fg.deobf("curse.maven:lionfish-api-1001614:5922047")
+    implementation fg.deobf("curse.maven:clothapi-348521:5729105")
+    implementation fg.deobf("curse.maven:bettercombat-639842:5625757")
+    implementation fg.deobf("curse.maven:citadel-331936:6702068")
+
+    runtimeOnly fg.deobf("curse.maven:curios-309927:6418456")
+    runtimeOnly fg.deobf("curse.maven:patchouli-306770:6164575")
+    runtimeOnly fg.deobf("curse.maven:enigmatic-336184:5600004")
+    runtimeOnly fg.deobf("curse.maven:armageddon-1110642:7142556")
+    runtimeOnly fg.deobf("curse.maven:attributefix-280510:4911084")
+    runtimeOnly fg.deobf("curse.maven:geckolib-388172:7553267")
+    compileOnly fg.deobf("curse.maven:geckolib-388172:7553267")
+    runtimeOnly fg.deobf("curse.maven:tooltipoverhaul-1327508:7096296")
+    runtimeOnly fg.deobf("curse.maven:obscureAPI-638417:7171906")
+    runtimeOnly fg.deobf("curse.maven:fancy-toasts-1326436:7302363")
+    runtimeOnly fg.deobf("curse.maven:terramity-1084134:6054971")
+    runtimeOnly fg.deobf("curse.maven:lethality-a-terramity-addon-1282036:7332696")
+    compileOnly fg.deobf("curse.maven:tooltipoverhaul-1327508:7096296")
+    compileOnly fg.deobf("curse.maven:obscureAPI-638417:7171906")
+    compileOnly fg.deobf("curse.maven:jei-238222:7391695")
+    runtimeOnly fg.deobf("curse.maven:playerAnimator-658587:4587214")
+    runtimeOnly fg.deobf("curse.maven:ironsspells-855414:7552907")
+    runtimeOnly fg.deobf("curse.maven:tosmagic-1046916:7424522")
+    runtimeOnly fg.deobf("curse.maven:mmmmmmmmmmmm-225738:6860192")
+    runtimeOnly fg.deobf("curse.maven:jade-324717:6855440")
+    runtimeOnly fg.deobf("curse.maven:jei-238222:7391695")
+    runtimeOnly fg.deobf("curse.maven:emi-580555:6420945")
+    runtimeOnly fg.deobf("curse.maven:combat-roll-678036:5625925")
+    runtimeOnly fg.deobf("curse.maven:alshanexs-familiars-1171602:7481428")
+    runtimeOnly fg.deobf("curse.maven:familiarslib-1316458:7468719")
+    runtimeOnly fg.deobf("curse.maven:ars-nouveau-401955:6688854")
+    runtimeOnly fg.deobf("curse.maven:gtbcs-geomancy-plus-1352485:7580390")
+    runtimeOnly fg.deobf("curse.maven:gtbcs-spelllib-1194714:7584987")
+    runtimeOnly fg.deobf("curse.maven:mowzies-mobs-250498:6586086")
+    compileOnly fg.deobf("curse.maven:emi-580555:6420945")
+    compileOnly fg.deobf("curse.maven:ars-nouveau-401955:6688854")
+    runtimeOnly fg.deobf("curse.maven:selene-499980:5454157")
+    runtimeOnly fg.deobf("curse.maven:lendercataclysm-551586:6906993")
+    runtimeOnly fg.deobf("curse.maven:alexscaves-924854:5848216")
+    runtimeOnly fg.deobf("curse.maven:caelus-308989:5281700")
+    runtimeOnly fg.deobf("curse.maven:bossesrise-1314084:7647581")
+    runtimeOnly fg.deobf("curse.maven:eeeabs-mobs-921600:6095880")
+    runtimeOnly fg.deobf("curse.maven:adams-ars-plus-1011093:7461849")
+    runtimeOnly fg.deobf("curse.maven:worldedit-225608:4586218")
+    compileOnly fg.deobf("curse.maven:worldedit-225608:4586218")
+    runtimeOnly fg.deobf("curse.maven:advanced-bow-enchantments-1480562:7782723")
+    runtimeOnly fg.deobf("curse.maven:enchanting-infuser-551151:5528724")
+    runtimeOnly fg.deobf("curse.maven:puzzles-lib-495476:6918565")
+    runtimeOnly fg.deobf("curse.maven:composite-material-982540:6310307")
+    runtimeOnly fg.deobf("curse.maven:goety-586095:6778940")
+    runtimeOnly fg.deobf("curse.maven:goety-revelation-1236817:6892481")
+    runtimeOnly fg.deobf("curse.maven:l2library-620203:6806000")
+    runtimeOnly fg.deobf("curse.maven:l2-backpack-620229:7698801")
+    runtimeOnly fg.deobf("curse.maven:l2-complements-758349:7606338")
+    runtimeOnly fg.deobf("curse.maven:l2-archery-758353:6234712")
+    runtimeOnly fg.deobf("curse.maven:meet-your-fight-409371:7616010")
+    runtimeOnly fg.deobf("curse.maven:ancient-elements-897127:7106759")
+    runtimeOnly fg.deobf("curse.maven:aquamirae-536254:7681754")
+    runtimeOnly fg.deobf("curse.maven:born-in-chaos-686437:7366478")
+    runtimeOnly fg.deobf("curse.maven:cerbons-api-955605:5050080")
+    runtimeOnly fg.deobf("curse.maven:bosses-of-mass-destruction-forge-941573:5067728")
+    runtimeOnly fg.deobf("curse.maven:knight-lib-1105855:7358169")
+    runtimeOnly fg.deobf("curse.maven:knight-quest-reforged-1018043:7118522")
+    runtimeOnly fg.deobf("curse.maven:legendary-monsters-944035:7628159")
+    runtimeOnly fg.deobf("curse.maven:embeddium-908741:5681725")
+    runtimeOnly fg.deobf("curse.maven:rubidium-extra-654373:6101745")
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    def replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            forge_version          : forge_version,
+            forge_version_range    : forge_version_range,
+            loader_version_range   : loader_version_range,
+            macabre_version_range  : macabre_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+            mod_authors            : mod_authors,
+            mod_description        : mod_description,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_authors,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                'MixinConfigs'            : "${mod_id}.mixins.json"
+        ])
+    }
+
+    finalizedBy 'reobfJar'
+}
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/mcmodsrepo"
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

@@ -1,0 +1,47 @@
+# Gradle
+.gradle/
+build/
+out/
+classes/
+
+# Forge run directories
+run/
+run-*/
+runs/
+logs/
+crash-reports/
+debug.log
+
+# Generated local repositories
+mcmodsrepo/
+
+# Reference jars are local inspection inputs, not source.
+reference/**/*.jar
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# VS Code
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local environment files
+.env
+.env.*
+*.local

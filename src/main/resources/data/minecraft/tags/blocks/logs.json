@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "macabre:soaked_log",
+    "macabre:soaked_wood",
+    "macabre:teething_log",
+    "macabre:teething_wood",
+    "macabre:wasted_log",
+    "macabre:wasted_wood",
+    "macabre:dried_log",
+    "macabre:dried_wood",
+    "macabre:dead_log",
+    "macabre:medium_dead_log",
+    "macabre:slim_dead_log"
+  ]
+}
