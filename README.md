@@ -22,6 +22,8 @@ Build the mod:
 
 The built mod jar is written to `build/libs/`.
 
+GitHub also builds the jar on every push to `main`. Open the latest Build workflow run and download the `macabrefix-jar` artifact.
+
 On Unix-like shells:
 
 ```bash
