@@ -16,9 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 
 public final class NetworkSyncThrottleFix {
-    private static long lastServerBossRandomTick = Long.MIN_VALUE;
-    private static long lastClientBossRandomTick = Long.MIN_VALUE;
-
     private NetworkSyncThrottleFix() {
     }
 
@@ -84,30 +81,17 @@ public final class NetworkSyncThrottleFix {
         });
     }
 
-    public static void replaceBossRandomSync(LevelAccessor levelAccessor) {
-        if (levelAccessor instanceof Level level) {
-            boolean clientSide = level.isClientSide;
-            long gameTime = level.getGameTime();
-            if (clientSide) {
-                if (lastClientBossRandomTick == gameTime) {
-                    return;
-                }
-                lastClientBossRandomTick = gameTime;
-            } else {
-                if (lastServerBossRandomTick == gameTime) {
-                    return;
-                }
-                lastServerBossRandomTick = gameTime;
-            }
-
-            updateBossRandomValues(MapVariables.get(levelAccessor), level.getRandom());
-        } else {
-            updateBossRandomValues(MapVariables.get(levelAccessor), RandomSource.create());
-        }
+    public static void replaceHollowRandomSync(LevelAccessor levelAccessor) {
+        RandomSource random = levelAccessor instanceof Level level ? level.getRandom() : RandomSource.create();
+        MapVariables.get(levelAccessor).hollow = Mth.nextInt(random, 1, 10);
     }
 
-    private static void updateBossRandomValues(MapVariables variables, RandomSource random) {
-        variables.hollow = Mth.nextInt(random, 1, 10);
+    public static void replaceBossAbilityRandomSync(LevelAccessor levelAccessor) {
+        RandomSource random = levelAccessor instanceof Level level ? level.getRandom() : RandomSource.create();
+        updateBossAbilityRandomValues(MapVariables.get(levelAccessor), random);
+    }
+
+    private static void updateBossAbilityRandomValues(MapVariables variables, RandomSource random) {
         variables.baalNumber = Mth.nextInt(random, 1, 200);
         variables.gomoriaNumber = Mth.nextInt(random, 1, 300);
         variables.valamonNumber = Mth.nextInt(random, 1, 300);

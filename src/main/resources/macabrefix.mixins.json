@@ -7,8 +7,12 @@
     "MacabreArmorSyncProcedureMixin",
     "MacabreAttributeProcedureMixin",
     "MacabreBossRandomSyncProcedureMixin",
+    "MacabreBossSpawnerProcedureMixin",
     "MacabreBossTickSortMixin",
-    "MacabreEffectSyncProcedureMixin"
+    "MacabreEffectSyncProcedureMixin",
+    "MacabreHollowRandomSyncProcedureMixin",
+    "MacabrePitEffectProcedureMixin",
+    "MacabreStructureTriggerMixin"
   ],
   "injectors": {
     "defaultRequire": 0
