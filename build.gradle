@@ -65,7 +65,7 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:clothapi-348521:5729105")
     runtimeOnly fg.deobf("curse.maven:bettercombat-639842:5625757")
     runtimeOnly fg.deobf("curse.maven:citadel-331936:6702068")
-
+    runtimeOnly fg.deobf("curse.maven:spark-361579:4738952")
     runtimeOnly fg.deobf("curse.maven:curios-309927:6418456")
     runtimeOnly fg.deobf("curse.maven:patchouli-306770:6164575")
     runtimeOnly fg.deobf("curse.maven:enigmatic-336184:5600004")
@@ -120,6 +120,7 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:legendary-monsters-944035:7628159")
     runtimeOnly fg.deobf("curse.maven:embeddium-908741:5681725")
     runtimeOnly fg.deobf("curse.maven:rubidium-extra-654373:6101745")
+    
 }
 
 tasks.named('processResources', ProcessResources).configure {

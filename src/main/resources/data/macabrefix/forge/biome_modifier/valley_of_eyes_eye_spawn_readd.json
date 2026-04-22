@@ -1,0 +1,30 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "macabre:valley_of_eyes",
+  "spawners": [
+    {
+      "type": "macabre:baloon_eye",
+      "weight": 12,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "macabre:baloon_eye_night",
+      "weight": 12,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "macabre:witness",
+      "weight": 12,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "macabre:witness_night",
+      "weight": 12,
+      "minCount": 1,
+      "maxCount": 1
+    }
+  ]
+}

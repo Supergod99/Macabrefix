@@ -9,6 +9,7 @@
     "MacabreBossRandomSyncProcedureMixin",
     "MacabreBossSpawnerProcedureMixin",
     "MacabreBossTickSortMixin",
+    "MacabreEntitySoundFallbackMixin",
     "MacabreEffectSyncProcedureMixin",
     "MacabreHollowRandomSyncProcedureMixin",
     "MacabrePitEffectProcedureMixin",
