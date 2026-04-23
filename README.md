@@ -38,4 +38,4 @@ src/main/java/com/doug/macabrefix/       Minimal Forge mod stubs
 src/main/resources/                      Forge metadata and mod assets
 ```
 
-Local development notes and upstream reference jars can live under `docs/` and `reference/`; both folders are ignored by Git.
+
