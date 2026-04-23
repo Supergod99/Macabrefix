@@ -1,5 +1,5 @@
 {
-  "type": "forge:removefeatures",
+  "type": "forge:remove_features",
   "biomes": [
     "macabre:cracked_cliffs",
     "macabre:crawling_field",

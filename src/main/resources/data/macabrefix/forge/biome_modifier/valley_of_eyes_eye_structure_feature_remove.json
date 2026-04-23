@@ -1,5 +1,5 @@
 {
-  "type": "forge:removefeatures",
+  "type": "forge:remove_features",
   "biomes": "macabre:valley_of_eyes",
   "features": "macabre:eye_8_feature",
   "steps": "surface_structures"
