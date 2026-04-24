@@ -5,7 +5,6 @@ import com.curseforge.macabre.init.MacabreModMobEffects;
 import com.curseforge.macabre.network.MacabreModVariables;
 import com.curseforge.macabre.network.MacabreModVariables.MapVariables;
 import com.curseforge.macabre.network.MacabreModVariables.PlayerVariables;
-import java.util.function.Supplier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -14,6 +13,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+
+import java.util.function.Supplier;
 
 public final class NetworkSyncThrottleFix {
     private NetworkSyncThrottleFix() {

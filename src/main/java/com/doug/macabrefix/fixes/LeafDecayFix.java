@@ -1,12 +1,6 @@
 package com.doug.macabrefix.fixes;
 
 import com.curseforge.macabre.init.MacabreModBlocks;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -17,6 +11,10 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 
+import java.util.*;
+import java.util.function.Supplier;
+
+@SuppressWarnings("unused")
 public final class LeafDecayFix {
     private static final int LEAF_SEED_HORIZONTAL_RADIUS = 8;
     private static final int LEAF_SEED_UP_RADIUS = 32;

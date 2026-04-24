@@ -17,8 +17,8 @@ public abstract class MacabreBossRandomSyncProcedureMixin {
             cancellable = true,
             remap = false,
             require = 0)
-    private static void macabrefix$updateBossRandomValuesWithoutSync(Event event, LevelAccessor level, CallbackInfo callbackInfo) {
-        NetworkSyncThrottleFix.replaceBossAbilityRandomSync(level);
+    private static void macabrefix$updateBossRandomValuesWithoutSync(Event event, LevelAccessor world, CallbackInfo callbackInfo) {
+        NetworkSyncThrottleFix.replaceBossAbilityRandomSync(world);
         callbackInfo.cancel();
     }
 }

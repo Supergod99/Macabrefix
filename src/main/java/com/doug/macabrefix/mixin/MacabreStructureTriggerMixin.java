@@ -20,8 +20,8 @@ public abstract class MacabreStructureTriggerMixin {
             remap = false,
             require = 0)
     private static void macabrefix$clearStructureTriggerWithoutTemplateRun(
-            LevelAccessor level, double x, double y, double z, CallbackInfo callbackInfo) {
-        level.setBlock(BlockPos.containing(x, y, z), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            LevelAccessor world, double x, double y, double z, CallbackInfo callbackInfo) {
+        world.setBlock(BlockPos.containing(x, y, z), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         callbackInfo.cancel();
     }
 }

@@ -2,12 +2,6 @@ package com.doug.macabrefix.fixes;
 
 import com.curseforge.macabre.network.MacabreModVariables;
 import com.curseforge.macabre.network.MacabreModVariables.PlayerVariables;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Supplier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -20,25 +14,29 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 
+import java.util.*;
+import java.util.function.Supplier;
+
+@SuppressWarnings("unused")
 public final class AttributeCompatibilityFix {
     private static final double EPSILON = 0.0000001D;
 
     private static final TrackedAttribute[] TRACKED_ATTRIBUTES = {
-            new TrackedAttribute(() -> ForgeMod.ENTITY_GRAVITY.get()),
+            new TrackedAttribute(ForgeMod.ENTITY_GRAVITY),
             new TrackedAttribute(() -> Attributes.MOVEMENT_SPEED),
-            new TrackedAttribute(() -> ForgeMod.BLOCK_REACH.get()),
-            new TrackedAttribute(() -> ForgeMod.ENTITY_REACH.get()),
+            new TrackedAttribute(ForgeMod.BLOCK_REACH),
+            new TrackedAttribute(ForgeMod.ENTITY_REACH),
             new TrackedAttribute(() -> Attributes.ATTACK_KNOCKBACK),
             new TrackedAttribute(() -> Attributes.ATTACK_SPEED),
             new TrackedAttribute(() -> Attributes.KNOCKBACK_RESISTANCE),
             new TrackedAttribute(() -> Attributes.MAX_HEALTH),
-            new TrackedAttribute(() -> ForgeMod.SWIM_SPEED.get()),
+            new TrackedAttribute(ForgeMod.SWIM_SPEED),
             new TrackedAttribute(() -> Attributes.ATTACK_DAMAGE)
     };
 
     private static final ArmorBonus[] ARMOR_BONUSES = {
             new ArmorBonus(
-                    () -> ForgeMod.ENTITY_GRAVITY.get(),
+                    ForgeMod.ENTITY_GRAVITY,
                     UUID.fromString("5b5f7e7f-22be-4c46-83fc-a4af70f21b3d"),
                     "macabrefix.macabre_armor.gravity",
                     0.08D,
@@ -50,13 +48,13 @@ public final class AttributeCompatibilityFix {
                     0.1D,
                     variables -> variables != null && variables.baalArmor ? 0.2D : 0.0D),
             new ArmorBonus(
-                    () -> ForgeMod.BLOCK_REACH.get(),
+                    ForgeMod.BLOCK_REACH,
                     UUID.fromString("1564a04f-6a2d-40e1-8d31-40879cf0be63"),
                     "macabrefix.macabre_armor.block_reach",
                     4.5D,
                     variables -> variables != null && variables.gomoriaArmor ? 3.5D : 0.0D),
             new ArmorBonus(
-                    () -> ForgeMod.ENTITY_REACH.get(),
+                    ForgeMod.ENTITY_REACH,
                     UUID.fromString("476c7b1b-1248-42fe-8c0e-c881c93a5774"),
                     "macabrefix.macabre_armor.entity_reach",
                     3.0D,
@@ -86,7 +84,7 @@ public final class AttributeCompatibilityFix {
                     20.0D,
                     AttributeCompatibilityFix::maxHealthBonus),
             new ArmorBonus(
-                    () -> ForgeMod.SWIM_SPEED.get(),
+                    ForgeMod.SWIM_SPEED,
                     UUID.fromString("2236f656-1a5b-40de-bf7d-f45c7f5bf21c"),
                     "macabrefix.macabre_armor.swim_speed",
                     1.0D,

@@ -17,8 +17,8 @@ public abstract class MacabreHollowRandomSyncProcedureMixin {
             cancellable = true,
             remap = false,
             require = 0)
-    private static void macabrefix$updateHollowRandomValueWithoutSync(Event event, LevelAccessor level, CallbackInfo callbackInfo) {
-        NetworkSyncThrottleFix.replaceHollowRandomSync(level);
+    private static void macabrefix$updateHollowRandomValueWithoutSync(Event event, LevelAccessor world, CallbackInfo callbackInfo) {
+        NetworkSyncThrottleFix.replaceHollowRandomSync(world);
         callbackInfo.cancel();
     }
 }

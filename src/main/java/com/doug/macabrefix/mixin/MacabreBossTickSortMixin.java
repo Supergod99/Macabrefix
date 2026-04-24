@@ -4,11 +4,12 @@ import com.curseforge.macabre.procedures.BaalOnEntityTickUpdateProcedure;
 import com.curseforge.macabre.procedures.GargamawOnEntityTickUpdateProcedure;
 import com.curseforge.macabre.procedures.MorphegorOnEntityTickUpdateProcedure;
 import com.curseforge.macabre.procedures.ValamonOnEntityTickUpdateProcedure;
-import java.util.Comparator;
-import java.util.stream.Stream;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
+
+import java.util.Comparator;
+import java.util.stream.Stream;
 
 @Mixin(
         value = {
