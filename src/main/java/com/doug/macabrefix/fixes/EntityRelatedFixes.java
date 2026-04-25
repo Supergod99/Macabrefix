@@ -3,11 +3,13 @@ package com.doug.macabrefix.fixes;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.PlayLevelSoundEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -37,8 +39,7 @@ public class EntityRelatedFixes {
             new ResourceLocation("macabre", "monolith"),
             new ResourceLocation("macabre", "molar"),
             new ResourceLocation("macabre", "canine"),
-            new ResourceLocation("macabre", "incisor"),
-            new ResourceLocation("macabre", "stagnant")
+            new ResourceLocation("macabre", "incisor")
     );
 
     private static final ResourceLocation WHIRLPOOL_ID = new ResourceLocation("macabre", "whirlpool");
@@ -91,6 +92,19 @@ public class EntityRelatedFixes {
             mob.setNoAi(true);
             mob.setNoGravity(true);
             mob.setDeltaMovement(0, 0, 0);
+        }
+    }
+
+    // prevents decorative entities from taking suffocation damage when spawning inside blocks, could make a smarter fix but it's too late lol
+    @SubscribeEvent
+    public static void onLivingAttack(LivingAttackEvent event) {
+        if (event.getEntity().level().isClientSide()) return;
+
+        if (event.getSource().is(DamageTypes.IN_WALL)) {
+            ResourceLocation typeKey = ForgeRegistries.ENTITY_TYPES.getKey(event.getEntity().getType());
+            if (typeKey != null && NO_AI_ENTITIES.contains(typeKey)) {
+                event.setCanceled(true);
+            }
         }
     }
 
