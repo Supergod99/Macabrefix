@@ -37,7 +37,8 @@ public class EntityRelatedFixes {
             new ResourceLocation("macabre", "monolith"),
             new ResourceLocation("macabre", "molar"),
             new ResourceLocation("macabre", "canine"),
-            new ResourceLocation("macabre", "incisor")
+            new ResourceLocation("macabre", "incisor"),
+            new ResourceLocation("macabre", "stagnant")
     );
 
     private static final ResourceLocation WHIRLPOOL_ID = new ResourceLocation("macabre", "whirlpool");
