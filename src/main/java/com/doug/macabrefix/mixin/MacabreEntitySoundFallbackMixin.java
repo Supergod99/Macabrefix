@@ -1,11 +1,6 @@
 package com.doug.macabrefix.mixin;
 
-import com.curseforge.macabre.entity.BaloonEyeEntity;
-import com.curseforge.macabre.entity.BaloonEyeNightEntity;
-import com.curseforge.macabre.entity.EyebaloonEntity;
-import com.curseforge.macabre.entity.EyebushEntity;
-import com.curseforge.macabre.entity.WitnessEntity;
-import com.curseforge.macabre.entity.WitnessNightEntity;
+import com.curseforge.macabre.entity.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;

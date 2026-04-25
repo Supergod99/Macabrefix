@@ -20,13 +20,13 @@ public abstract class MacabrePitEffectProcedureMixin {
             require = 0)
     private static void macabrefix$replacePitEffectQueueSync(
             Event event,
-            LevelAccessor levelAccessor,
+            LevelAccessor world,
             double x,
             double y,
             double z,
             Entity entity,
             CallbackInfo callbackInfo) {
-        PitEffectQueueSyncFix.replacePitEffectProcedure(levelAccessor, x, y, z, entity);
+        PitEffectQueueSyncFix.replacePitEffectProcedure(world, x, y, z, entity);
         callbackInfo.cancel();
     }
 }

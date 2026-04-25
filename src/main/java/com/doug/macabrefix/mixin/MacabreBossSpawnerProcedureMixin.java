@@ -19,8 +19,8 @@ public abstract class MacabreBossSpawnerProcedureMixin {
             remap = false,
             require = 0)
     private static void macabrefix$replaceHollowSpawnerTick(
-            LevelAccessor level, double x, double y, double z, Entity entity, CallbackInfo callbackInfo) {
-        BossSpawnerDuplicateFix.replaceHollowSpawnerTick(level, x, y, z, entity);
+            LevelAccessor world, double x, double y, double z, Entity entity, CallbackInfo callbackInfo) {
+        BossSpawnerDuplicateFix.replaceHollowSpawnerTick(world, x, y, z, entity);
         callbackInfo.cancel();
     }
 }

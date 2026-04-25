@@ -12,7 +12,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.util.LazyOptional;
@@ -90,7 +89,7 @@ public final class PitEffectQueueSyncFix {
         SoundEvent soundEvent = soundId == null ? null : ForgeRegistries.SOUND_EVENTS.getValue(soundId);
         if (soundEvent != null) {
             level.playSound(
-                    (Player) null,
+                    null,
                     BlockPos.containing(x, y, z),
                     soundEvent,
                     SoundSource.NEUTRAL,
@@ -135,37 +134,28 @@ public final class PitEffectQueueSyncFix {
     private record PitEvent(String sound, float volume, double[] sequence) {
     }
 
-    private static final class PitEffectSequenceStep implements Runnable {
-        private final Entity entity;
-        private final double[] sequence;
-        private final int index;
-
-        private PitEffectSequenceStep(Entity entity, double[] sequence, int index) {
-            this.entity = entity;
-            this.sequence = sequence;
-            this.index = index;
-        }
+    private record PitEffectSequenceStep(Entity entity, double[] sequence, int index) implements Runnable {
 
         @Override
-        public void run() {
-            if (entity.isRemoved()) {
-                return;
-            }
-
-            entity.getCapability(MacabreModVariables.PLAYER_VARIABLES_CAPABILITY).ifPresent(variables -> {
-                double value = sequence[index];
-                if (!variables.ENTERPIT && value != 0.0D) {
-                    setPitEffect(entity, variables, 0.0D);
+            public void run() {
+                if (entity.isRemoved()) {
                     return;
                 }
 
-                setPitEffect(entity, variables, value);
-                if (value != 0.0D && index + 1 < sequence.length) {
-                    MacabreMod.queueServerWork(
-                            STEP_DELAY_TICKS,
-                            new PitEffectSequenceStep(entity, sequence, index + 1));
-                }
-            });
+                entity.getCapability(MacabreModVariables.PLAYER_VARIABLES_CAPABILITY).ifPresent(variables -> {
+                    double value = sequence[index];
+                    if (!variables.ENTERPIT && value != 0.0D) {
+                        setPitEffect(entity, variables, 0.0D);
+                        return;
+                    }
+
+                    setPitEffect(entity, variables, value);
+                    if (value != 0.0D && index + 1 < sequence.length) {
+                        MacabreMod.queueServerWork(
+                                STEP_DELAY_TICKS,
+                                new PitEffectSequenceStep(entity, sequence, index + 1));
+                    }
+                });
+            }
         }
-    }
 }
