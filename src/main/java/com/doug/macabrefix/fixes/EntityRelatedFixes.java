@@ -8,6 +8,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.PlayLevelSoundEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -20,26 +21,63 @@ public class EntityRelatedFixes {
     private static final double DENSITY_CHECK_RADIUS = 16.0;
 
     // entities entered here will have their AI and gravity disabled, and their spawns limited
-    private static final Set<String> NO_AI_ENTITIES = Set.of(
-            "macabre:veintree_mid",
-            "macabre:blindballoon",
-            "macabre:worm",
-            "macabre:worm_night",
-            "macabre:gargamaw_spawner",
-            "macabre:baal_spawner",
-            "macabre:valamon_spawner",
-            "macabre:morphegor_spawner",
-            "macabre:gomoria_spawner",
-            "macabre:fernrot",
-            "macabre:spewer",
-            "macabre:ultra_tree_spawner",
-            "macabre:monolith",
-            "macabre:molar",
-            "macabre:canine",
-            "macabre:incisor"
+    private static final Set<ResourceLocation> NO_AI_ENTITIES = Set.of(
+            new ResourceLocation("macabre", "veintree_mid"),
+            new ResourceLocation("macabre", "blindballoon"),
+            new ResourceLocation("macabre", "worm"),
+            new ResourceLocation("macabre", "worm_night"),
+            new ResourceLocation("macabre", "gargamaw_spawner"),
+            new ResourceLocation("macabre", "baal_spawner"),
+            new ResourceLocation("macabre", "valamon_spawner"),
+            new ResourceLocation("macabre", "morphegor_spawner"),
+            new ResourceLocation("macabre", "gomoria_spawner"),
+            new ResourceLocation("macabre", "fernrot"),
+            new ResourceLocation("macabre", "spewer"),
+            new ResourceLocation("macabre", "ultra_tree_spawner"),
+            new ResourceLocation("macabre", "monolith"),
+            new ResourceLocation("macabre", "molar"),
+            new ResourceLocation("macabre", "canine"),
+            new ResourceLocation("macabre", "incisor")
     );
 
-    private static final String WHIRLPOOL_ID = "macabre:whirlpool";
+    private static final ResourceLocation WHIRLPOOL_ID = new ResourceLocation("macabre", "whirlpool");
+    private static final ResourceLocation WHISPERS_ID = new ResourceLocation("macabre", "whispers");
+    private static final ResourceLocation SKELETON_HURT_ID = new ResourceLocation("minecraft", "entity.skeleton.hurt");
+    private static final ResourceLocation MEATY_HIT_ID = new ResourceLocation("goety", "scythe_hit_meaty");
+    private static final ResourceLocation MARAUDER_ID = new ResourceLocation("macabre", "marauder");
+    private static final ResourceLocation MARAUDER_NIGHT_ID = new ResourceLocation("macabre", "marauder_night");
+
+    @SubscribeEvent
+    public static void onCheckSpawn(MobSpawnEvent.FinalizeSpawn event) {
+        if (event.getLevel().isClientSide()) return;
+
+        Mob mob = event.getEntity();
+        ResourceLocation typeKey = ForgeRegistries.ENTITY_TYPES.getKey(mob.getType());
+        if (typeKey == null) return;
+
+        if (NO_AI_ENTITIES.contains(typeKey)) {
+            AABB checkArea = mob.getBoundingBox().inflate(DENSITY_CHECK_RADIUS);
+            int count = event.getLevel().getEntitiesOfClass(Mob.class, checkArea,
+                    e -> typeKey.equals(ForgeRegistries.ENTITY_TYPES.getKey(e.getType()))
+            ).size();
+
+            if (count >= MAX_DECORATION_DENSITY) {
+                event.setSpawnCancelled(true);
+                event.setCanceled(true);
+            }
+        } else if (typeKey.equals(WHIRLPOOL_ID)) {
+            // whirlpool bug fix
+            AABB checkArea = mob.getBoundingBox().inflate(16.0);
+            boolean hasNearby = !event.getLevel().getEntitiesOfClass(Mob.class, checkArea,
+                    e -> WHIRLPOOL_ID.equals(ForgeRegistries.ENTITY_TYPES.getKey(e.getType()))
+            ).isEmpty();
+
+            if (hasNearby) {
+                event.setSpawnCancelled(true);
+                event.setCanceled(true);
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void onEntityJoin(EntityJoinLevelEvent event) {
@@ -48,40 +86,10 @@ public class EntityRelatedFixes {
         Entity entity = event.getEntity();
         ResourceLocation typeKey = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
 
-        if (typeKey != null) {
-            String entityId = typeKey.toString();
-
-            if (NO_AI_ENTITIES.contains(entityId) && entity instanceof Mob mob) {
-                // Density check: stop spawning if there are too many nearby
-                AABB checkArea = entity.getBoundingBox().inflate(DENSITY_CHECK_RADIUS);
-                int nearbyCount = event.getLevel().getEntities(entity, checkArea, e -> {
-                    ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(e.getType());
-                    return key != null && key.toString().equals(entityId);
-                }).size();
-
-                if (nearbyCount >= MAX_DECORATION_DENSITY) {
-                    event.setCanceled(true);
-                    return;
-                }
-
-                mob.setNoAi(true);
-                mob.setNoGravity(true);
-                mob.setDeltaMovement(0, 0, 0);
-                return;
-            }
-
-            // whirlpool bug fix
-            if (entityId.equals(WHIRLPOOL_ID)) {
-                AABB checkArea = entity.getBoundingBox().inflate(16.0);
-                boolean hasNearbyWhirlpool = !event.getLevel().getEntities(entity, checkArea, e -> {
-                    ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(e.getType());
-                    return key != null && key.toString().equals(WHIRLPOOL_ID);
-                }).isEmpty();
-
-                if (hasNearbyWhirlpool) {
-                    event.setCanceled(true);
-                }
-            }
+        if (typeKey != null && NO_AI_ENTITIES.contains(typeKey) && entity instanceof Mob mob) {
+            mob.setNoAi(true);
+            mob.setNoGravity(true);
+            mob.setDeltaMovement(0, 0, 0);
         }
     }
 
@@ -91,10 +99,9 @@ public class EntityRelatedFixes {
         Holder<SoundEvent> soundHolder = event.getSound();
         if (soundHolder == null) return;
 
-        SoundEvent soundEvent = soundHolder.value();
-        String soundId = soundEvent.getLocation().toString();
+        ResourceLocation soundLoc = soundHolder.value().getLocation();
 
-        if (soundId.equals("macabre:whispers")) {
+        if (soundLoc.equals(WHISPERS_ID)) {
             if (event.isCancelable()) {
                 event.setCanceled(true);
             }
@@ -103,23 +110,19 @@ public class EntityRelatedFixes {
         }
 
         // changes the marauders hit sound to an actual fleshy sound (it was skeleton hit sound before)
-        if (soundId.equals("minecraft:entity.skeleton.hurt") && event instanceof PlayLevelSoundEvent.AtEntity atEntityEvent) {
+        if (soundLoc.equals(SKELETON_HURT_ID) && event instanceof PlayLevelSoundEvent.AtEntity atEntityEvent) {
             Entity entity = atEntityEvent.getEntity();
             if (entity != null) {
                 ResourceLocation entityLoc = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
-                if (entityLoc != null) {
-                    String entityId = entityLoc.toString();
-                    if (entityId.equals("macabre:marauder") || entityId.equals("macabre:marauder_night")) {
-                        float originalVolume = event.getNewVolume();
-                        float originalPitch = event.getNewPitch();
-                        if (event.isCancelable()) {
-                            event.setCanceled(true);
-                        }
-                        event.setNewVolume(0.0f);
-                        SoundEvent newSound = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("goety", "scythe_hit_meaty"));
-                        if (newSound != null && !entity.level().isClientSide()) {
-                            entity.playSound(newSound, originalVolume, originalPitch);
-                        }
+                if (MARAUDER_ID.equals(entityLoc) || MARAUDER_NIGHT_ID.equals(entityLoc)) {
+                    if (event.isCancelable()) {
+                        event.setCanceled(true);
+                    }
+                    event.setNewVolume(0.0f);
+
+                    SoundEvent newSound = ForgeRegistries.SOUND_EVENTS.getValue(MEATY_HIT_ID);
+                    if (newSound != null && !entity.level().isClientSide()) {
+                        entity.playSound(newSound, event.getNewVolume(), event.getNewPitch());
                     }
                 }
             }
