@@ -39,15 +39,12 @@ public class EntityRelatedFixes {
             new ResourceLocation("macabre", "monolith"),
             new ResourceLocation("macabre", "molar"),
             new ResourceLocation("macabre", "canine"),
-            new ResourceLocation("macabre", "incisor")
+            new ResourceLocation("macabre", "incisor"),
+            new ResourceLocation("macabre", "stagnant")
     );
 
     private static final ResourceLocation WHIRLPOOL_ID = new ResourceLocation("macabre", "whirlpool");
     private static final ResourceLocation WHISPERS_ID = new ResourceLocation("macabre", "whispers");
-    private static final ResourceLocation SKELETON_HURT_ID = new ResourceLocation("minecraft", "entity.skeleton.hurt");
-    private static final ResourceLocation MEATY_HIT_ID = new ResourceLocation("goety", "scythe_hit_meaty");
-    private static final ResourceLocation MARAUDER_ID = new ResourceLocation("macabre", "marauder");
-    private static final ResourceLocation MARAUDER_NIGHT_ID = new ResourceLocation("macabre", "marauder_night");
 
     @SubscribeEvent
     public static void onCheckSpawn(MobSpawnEvent.FinalizeSpawn event) {
@@ -122,25 +119,6 @@ public class EntityRelatedFixes {
             }
             event.setNewVolume(0.0f);
             return;
-        }
-
-        // changes the marauders hit sound to an actual fleshy sound (it was skeleton hit sound before)
-        if (soundLoc.equals(SKELETON_HURT_ID) && event instanceof PlayLevelSoundEvent.AtEntity atEntityEvent) {
-            Entity entity = atEntityEvent.getEntity();
-            if (entity != null) {
-                ResourceLocation entityLoc = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
-                if (MARAUDER_ID.equals(entityLoc) || MARAUDER_NIGHT_ID.equals(entityLoc)) {
-                    if (event.isCancelable()) {
-                        event.setCanceled(true);
-                    }
-                    event.setNewVolume(0.0f);
-
-                    SoundEvent newSound = ForgeRegistries.SOUND_EVENTS.getValue(MEATY_HIT_ID);
-                    if (newSound != null && !entity.level().isClientSide()) {
-                        entity.playSound(newSound, event.getNewVolume(), event.getNewPitch());
-                    }
-                }
-            }
         }
     }
 }
