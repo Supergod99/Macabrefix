@@ -1,11 +1,14 @@
 package com.doug.macabrefix.fixes;
 
+import com.doug.macabrefix.config.MacabrefixConfig;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.PlayLevelSoundEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -14,64 +17,57 @@ import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class EntityRelatedFixes {
+    private static final String MACABRE = "macabre";
 
-    // density config for decorative entities
     private static final int MAX_DECORATION_DENSITY = 3;
     private static final double DENSITY_CHECK_RADIUS = 16.0;
+    private static final double WHIRLPOOL_CHECK_RADIUS = 16.0;
 
-    // entities entered here will have their AI and gravity disabled, and their spawns limited
-    private static final Set<ResourceLocation> NO_AI_ENTITIES = Set.of(
-            new ResourceLocation("macabre", "veintree_mid"),
-            new ResourceLocation("macabre", "blindballoon"),
-            new ResourceLocation("macabre", "worm"),
-            new ResourceLocation("macabre", "worm_night"),
-            new ResourceLocation("macabre", "gargamaw_spawner"),
-            new ResourceLocation("macabre", "baal_spawner"),
-            new ResourceLocation("macabre", "valamon_spawner"),
-            new ResourceLocation("macabre", "morphegor_spawner"),
-            new ResourceLocation("macabre", "gomoria_spawner"),
-            new ResourceLocation("macabre", "fernrot"),
-            new ResourceLocation("macabre", "spewer"),
-            new ResourceLocation("macabre", "ultra_tree_spawner"),
-            new ResourceLocation("macabre", "monolith"),
-            new ResourceLocation("macabre", "molar"),
-            new ResourceLocation("macabre", "canine"),
-            new ResourceLocation("macabre", "incisor"),
-            new ResourceLocation("macabre", "stagnant")
+    private static final Set<ResourceLocation> NO_AI_ENTITY_IDS = Set.of(
+            id("veintree_mid"),
+            id("blindballoon"),
+            id("worm"),
+            id("worm_night"),
+            id("gargamaw_spawner"),
+            id("baal_spawner"),
+            id("valamon_spawner"),
+            id("morphegor_spawner"),
+            id("gomoria_spawner"),
+            id("fernrot"),
+            id("spewer"),
+            id("ultra_tree_spawner"),
+            id("monolith"),
+            id("molar"),
+            id("canine"),
+            id("incisor"),
+            id("stagnant")
     );
 
-    private static final ResourceLocation WHIRLPOOL_ID = new ResourceLocation("macabre", "whirlpool");
-    private static final ResourceLocation WHISPERS_ID = new ResourceLocation("macabre", "whispers");
+    private static final ResourceLocation WHIRLPOOL_ID = id("whirlpool");
+    private static final ResourceLocation WHISPERS_ID = id("whispers");
+
+    private static Set<EntityType<?>> noAiEntityTypes = Set.of();
+    private static EntityType<?> whirlpoolType;
+    private static boolean entityTypesResolved;
 
     @SubscribeEvent
     public static void onCheckSpawn(MobSpawnEvent.FinalizeSpawn event) {
-        if (event.getLevel().isClientSide()) return;
+        if (!MacabrefixConfig.entityRelatedFixesEnabled() || event.getLevel().isClientSide()) return;
 
         Mob mob = event.getEntity();
-        ResourceLocation typeKey = ForgeRegistries.ENTITY_TYPES.getKey(mob.getType());
-        if (typeKey == null) return;
+        EntityType<?> type = mob.getType();
 
-        if (NO_AI_ENTITIES.contains(typeKey)) {
-            AABB checkArea = mob.getBoundingBox().inflate(DENSITY_CHECK_RADIUS);
-            int count = event.getLevel().getEntitiesOfClass(Mob.class, checkArea,
-                    e -> typeKey.equals(ForgeRegistries.ENTITY_TYPES.getKey(e.getType()))
-            ).size();
-
-            if (count >= MAX_DECORATION_DENSITY) {
+        if (isNoAiEntity(type)) {
+            if (hasAtLeastSameType(event.getLevel(), mob, type, DENSITY_CHECK_RADIUS, MAX_DECORATION_DENSITY)) {
                 event.setSpawnCancelled(true);
                 event.setCanceled(true);
             }
-        } else if (typeKey.equals(WHIRLPOOL_ID)) {
-            // whirlpool bug fix
-            AABB checkArea = mob.getBoundingBox().inflate(16.0);
-            boolean hasNearby = !event.getLevel().getEntitiesOfClass(Mob.class, checkArea,
-                    e -> WHIRLPOOL_ID.equals(ForgeRegistries.ENTITY_TYPES.getKey(e.getType()))
-            ).isEmpty();
-
-            if (hasNearby) {
+        } else if (type == getWhirlpoolType()) {
+            if (hasAtLeastSameType(event.getLevel(), mob, type, WHIRLPOOL_CHECK_RADIUS, 1)) {
                 event.setSpawnCancelled(true);
                 event.setCanceled(true);
             }
@@ -80,34 +76,29 @@ public class EntityRelatedFixes {
 
     @SubscribeEvent
     public static void onEntityJoin(EntityJoinLevelEvent event) {
-        if (event.getLevel().isClientSide()) return;
+        if (!MacabrefixConfig.entityRelatedFixesEnabled() || event.getLevel().isClientSide()) return;
 
         Entity entity = event.getEntity();
-        ResourceLocation typeKey = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
-
-        if (typeKey != null && NO_AI_ENTITIES.contains(typeKey) && entity instanceof Mob mob) {
+        if (isNoAiEntity(entity.getType()) && entity instanceof Mob mob) {
             mob.setNoAi(true);
             mob.setNoGravity(true);
             mob.setDeltaMovement(0, 0, 0);
         }
     }
 
-    // prevents decorative entities from taking suffocation damage when spawning inside blocks, could make a smarter fix but it's too late lol
     @SubscribeEvent
     public static void onLivingAttack(LivingAttackEvent event) {
-        if (event.getEntity().level().isClientSide()) return;
+        if (!MacabrefixConfig.entityRelatedFixesEnabled() || event.getEntity().level().isClientSide()) return;
 
-        if (event.getSource().is(DamageTypes.IN_WALL)) {
-            ResourceLocation typeKey = ForgeRegistries.ENTITY_TYPES.getKey(event.getEntity().getType());
-            if (typeKey != null && NO_AI_ENTITIES.contains(typeKey)) {
-                event.setCanceled(true);
-            }
+        if (event.getSource().is(DamageTypes.IN_WALL) && isNoAiEntity(event.getEntity().getType())) {
+            event.setCanceled(true);
         }
     }
 
-    // disables the stupid ass annoying whispers from playing at all
     @SubscribeEvent
     public static void onPlayLevelSound(PlayLevelSoundEvent event) {
+        if (!MacabrefixConfig.entityRelatedFixesEnabled()) return;
+
         Holder<SoundEvent> soundHolder = event.getSound();
         if (soundHolder == null) return;
 
@@ -118,7 +109,53 @@ public class EntityRelatedFixes {
                 event.setCanceled(true);
             }
             event.setNewVolume(0.0f);
+        }
+    }
+
+    private static boolean isNoAiEntity(EntityType<?> type) {
+        return getNoAiEntityTypes().contains(type);
+    }
+
+    private static Set<EntityType<?>> getNoAiEntityTypes() {
+        resolveEntityTypes();
+        return noAiEntityTypes;
+    }
+
+    private static EntityType<?> getWhirlpoolType() {
+        resolveEntityTypes();
+        return whirlpoolType;
+    }
+
+    private static void resolveEntityTypes() {
+        if (entityTypesResolved) {
             return;
         }
+
+        Set<EntityType<?>> resolvedNoAiTypes = new HashSet<>();
+        for (ResourceLocation id : NO_AI_ENTITY_IDS) {
+            EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(id);
+            if (type != null) {
+                resolvedNoAiTypes.add(type);
+            }
+        }
+
+        noAiEntityTypes = Set.copyOf(resolvedNoAiTypes);
+        whirlpoolType = ForgeRegistries.ENTITY_TYPES.getValue(WHIRLPOOL_ID);
+        entityTypesResolved = true;
+    }
+
+    private static boolean hasAtLeastSameType(LevelAccessor level, Mob origin, EntityType<?> type, double radius, int limit) {
+        AABB checkArea = origin.getBoundingBox().inflate(radius);
+        int count = 0;
+        for (Mob nearby : level.getEntitiesOfClass(Mob.class, checkArea, entity -> entity.getType() == type)) {
+            if (++count >= limit) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static ResourceLocation id(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MACABRE, path);
     }
 }

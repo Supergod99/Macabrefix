@@ -1,6 +1,7 @@
 package com.doug.macabrefix.mixin;
 
 import com.curseforge.macabre.procedures.MacabreEffectProcedure;
+import com.doug.macabrefix.config.MacabrefixConfig;
 import com.doug.macabrefix.fixes.PitEffectQueueSyncFix;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.LevelAccessor;
@@ -26,6 +27,10 @@ public abstract class MacabrePitEffectProcedureMixin {
             double z,
             Entity entity,
             CallbackInfo callbackInfo) {
+        if (!MacabrefixConfig.pitEffectQueueSyncFixEnabled()) {
+            return;
+        }
+
         PitEffectQueueSyncFix.replacePitEffectProcedure(world, x, y, z, entity);
         callbackInfo.cancel();
     }

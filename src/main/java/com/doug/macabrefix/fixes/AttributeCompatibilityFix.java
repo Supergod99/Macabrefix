@@ -2,6 +2,7 @@ package com.doug.macabrefix.fixes;
 
 import com.curseforge.macabre.network.MacabreModVariables;
 import com.curseforge.macabre.network.MacabreModVariables.PlayerVariables;
+import com.doug.macabrefix.config.MacabrefixConfig;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -110,6 +111,10 @@ public final class AttributeCompatibilityFix {
     }
 
     public static void replaceMacabreAttributeProcedure(Entity entity) {
+        if (!MacabrefixConfig.attributeCompatibilityFixEnabled()) {
+            return;
+        }
+
         if (entity instanceof Player player) {
             SOURCE_BLOCKED_PLAYERS.add(PlayerKey.of(player));
             PlayerVariables variables = player.getCapability(MacabreModVariables.PLAYER_VARIABLES_CAPABILITY)
@@ -121,7 +126,7 @@ public final class AttributeCompatibilityFix {
     }
 
     private static void onPlayerTickStart(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.START) {
+        if (!MacabrefixConfig.attributeCompatibilityFixEnabled() || event.phase != TickEvent.Phase.START) {
             return;
         }
 
@@ -140,7 +145,7 @@ public final class AttributeCompatibilityFix {
     }
 
     private static void onPlayerTickEnd(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) {
+        if (!MacabrefixConfig.attributeCompatibilityFixEnabled() || event.phase != TickEvent.Phase.END) {
             return;
         }
 

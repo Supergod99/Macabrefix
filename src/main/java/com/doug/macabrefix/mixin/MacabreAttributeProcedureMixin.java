@@ -1,6 +1,7 @@
 package com.doug.macabrefix.mixin;
 
 import com.curseforge.macabre.procedures.BlooodAttribuesProcedure;
+import com.doug.macabrefix.config.MacabrefixConfig;
 import com.doug.macabrefix.fixes.AttributeCompatibilityFix;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.eventbus.api.Event;
@@ -18,6 +19,10 @@ public abstract class MacabreAttributeProcedureMixin {
             remap = false,
             require = 0)
     private static void macabrefix$skipHardBaseAttributeWrites(Event event, Entity entity, CallbackInfo callbackInfo) {
+        if (!MacabrefixConfig.attributeCompatibilityFixEnabled()) {
+            return;
+        }
+
         AttributeCompatibilityFix.replaceMacabreAttributeProcedure(entity);
         callbackInfo.cancel();
     }

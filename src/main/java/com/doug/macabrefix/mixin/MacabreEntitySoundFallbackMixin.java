@@ -1,6 +1,7 @@
 package com.doug.macabrefix.mixin;
 
 import com.curseforge.macabre.entity.*;
+import com.doug.macabrefix.config.MacabrefixConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -34,6 +35,6 @@ public abstract class MacabreEntitySoundFallbackMixin {
             remap = false)
     private Object macabrefix$fallbackMissingSound(IForgeRegistry<SoundEvent> registry, ResourceLocation soundId) {
         SoundEvent sound = registry.getValue(soundId);
-        return sound != null ? sound : SoundEvents.GRASS_BREAK;
+        return sound != null || !MacabrefixConfig.entitySoundFallbackFixEnabled() ? sound : SoundEvents.GRASS_BREAK;
     }
 }

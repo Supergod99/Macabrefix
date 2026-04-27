@@ -2,6 +2,7 @@ package com.doug.macabrefix.mixin;
 
 import com.curseforge.macabre.procedures.DunGenUpdateTickProcedure;
 import com.curseforge.macabre.procedures.VilGenUpdateTickProcedure;
+import com.doug.macabrefix.config.MacabrefixConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -21,6 +22,10 @@ public abstract class MacabreStructureTriggerMixin {
             require = 0)
     private static void macabrefix$clearStructureTriggerWithoutTemplateRun(
             LevelAccessor world, double x, double y, double z, CallbackInfo callbackInfo) {
+        if (!MacabrefixConfig.structureTriggerFixEnabled()) {
+            return;
+        }
+
         world.setBlock(BlockPos.containing(x, y, z), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         callbackInfo.cancel();
     }

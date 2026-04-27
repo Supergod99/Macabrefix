@@ -1,6 +1,7 @@
 package com.doug.macabrefix.fixes;
 
 import com.curseforge.macabre.init.MacabreModBlocks;
+import com.doug.macabrefix.config.MacabrefixConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -51,7 +52,10 @@ public final class LeafDecayFix {
     }
 
     private static void onBlockBreak(BlockEvent.BreakEvent event) {
-        if (!(event.getLevel() instanceof ServerLevel level) || event.isCanceled() || !isMacabreLog(event.getState())) {
+        if (!MacabrefixConfig.leafDecayFixEnabled()
+                || !(event.getLevel() instanceof ServerLevel level)
+                || event.isCanceled()
+                || !isMacabreLog(event.getState())) {
             return;
         }
 

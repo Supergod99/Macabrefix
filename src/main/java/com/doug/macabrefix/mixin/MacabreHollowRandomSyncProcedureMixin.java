@@ -1,6 +1,7 @@
 package com.doug.macabrefix.mixin;
 
 import com.curseforge.macabre.procedures.BosstickresetProcedure;
+import com.doug.macabrefix.config.MacabrefixConfig;
 import com.doug.macabrefix.fixes.NetworkSyncThrottleFix;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.eventbus.api.Event;
@@ -18,6 +19,10 @@ public abstract class MacabreHollowRandomSyncProcedureMixin {
             remap = false,
             require = 0)
     private static void macabrefix$updateHollowRandomValueWithoutSync(Event event, LevelAccessor world, CallbackInfo callbackInfo) {
+        if (!MacabrefixConfig.networkSyncThrottleFixEnabled()) {
+            return;
+        }
+
         NetworkSyncThrottleFix.replaceHollowRandomSync(world);
         callbackInfo.cancel();
     }

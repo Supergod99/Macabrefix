@@ -1,6 +1,7 @@
 package com.doug.macabrefix.mixin;
 
 import com.curseforge.macabre.procedures.BloodArmorAttributesProcedure;
+import com.doug.macabrefix.config.MacabrefixConfig;
 import com.doug.macabrefix.fixes.NetworkSyncThrottleFix;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.eventbus.api.Event;
@@ -18,6 +19,10 @@ public abstract class MacabreArmorSyncProcedureMixin {
             remap = false,
             require = 0)
     private static void macabrefix$syncArmorFlagsOnlyWhenChanged(Event event, Entity entity, CallbackInfo callbackInfo) {
+        if (!MacabrefixConfig.networkSyncThrottleFixEnabled()) {
+            return;
+        }
+
         NetworkSyncThrottleFix.replaceArmorFlagSync(entity);
         callbackInfo.cancel();
     }

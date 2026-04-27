@@ -2,6 +2,7 @@ package com.doug.macabrefix.mixin;
 
 import com.curseforge.macabre.procedures.BossSpawner2OnEntityTickUpdateProcedure;
 import com.curseforge.macabre.procedures.BossSpawnerOnEntityTickUpdateProcedure;
+import com.doug.macabrefix.config.MacabrefixConfig;
 import com.doug.macabrefix.fixes.BossSpawnerDuplicateFix;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.LevelAccessor;
@@ -20,6 +21,10 @@ public abstract class MacabreBossSpawnerProcedureMixin {
             require = 0)
     private static void macabrefix$replaceHollowSpawnerTick(
             LevelAccessor world, double x, double y, double z, Entity entity, CallbackInfo callbackInfo) {
+        if (!MacabrefixConfig.bossSpawnerDuplicateFixEnabled()) {
+            return;
+        }
+
         BossSpawnerDuplicateFix.replaceHollowSpawnerTick(world, x, y, z, entity);
         callbackInfo.cancel();
     }

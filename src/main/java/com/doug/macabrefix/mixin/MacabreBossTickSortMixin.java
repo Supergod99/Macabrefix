@@ -4,6 +4,7 @@ import com.curseforge.macabre.procedures.BaalOnEntityTickUpdateProcedure;
 import com.curseforge.macabre.procedures.GargamawOnEntityTickUpdateProcedure;
 import com.curseforge.macabre.procedures.MorphegorOnEntityTickUpdateProcedure;
 import com.curseforge.macabre.procedures.ValamonOnEntityTickUpdateProcedure;
+import com.doug.macabrefix.config.MacabrefixConfig;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -29,6 +30,6 @@ public abstract class MacabreBossTickSortMixin {
             require = 0)
     @SuppressWarnings("rawtypes")
     private static Stream macabrefix$skipUnusedNearbyEntitySort(Stream stream, Comparator comparator) {
-        return stream;
+        return MacabrefixConfig.bossTickSortFixEnabled() ? stream : stream.sorted(comparator);
     }
 }
