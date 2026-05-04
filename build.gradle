@@ -14,6 +14,10 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+def disableMacabrefixRunMod = providers.gradleProperty('macabrefix.disableRunMod')
+        .map { it.toBoolean() }
+        .orElse(false)
+
 minecraft {
     mappings channel: mapping_channel, version: mapping_version
     copyIdeResources = true
@@ -26,11 +30,14 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', layout.buildDirectory.file('createSrgToMcp/output.srg').get().asFile.absolutePath
-            arg "-mixin.config=${mod_id}.mixins.json"
 
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
+            if (!disableMacabrefixRunMod.get()) {
+                arg "-mixin.config=${mod_id}.mixins.json"
+
+                mods {
+                    "${mod_id}" {
+                        source sourceSets.main
+                    }
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.doug.macabrefix;
 
+import com.doug.macabrefix.config.MacabrefixArmorConfig;
 import com.doug.macabrefix.config.MacabrefixConfig;
 import com.doug.macabrefix.fixes.EntityRelatedFixes;
 import com.doug.macabrefix.fixes.FixRegistrar;
@@ -13,6 +14,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public final class MacabreFix {
     public MacabreFix(FMLJavaModLoadingContext context) {
         context.registerConfig(ModConfig.Type.COMMON, MacabrefixConfig.SPEC);
+        context.registerConfig(ModConfig.Type.COMMON, MacabrefixArmorConfig.SPEC, "macabrefix-armor-common.toml");
         MinecraftForge.EVENT_BUS.register(EntityRelatedFixes.class);
         FixRegistrar.register();
     }

@@ -1,1 +1,7 @@
-{}
+{
+  "tooltip.macabrefix.boss_armor.baal": "Full set required: +20 Max Health, +200% Movement Speed, and Reduced Gravity.",
+  "tooltip.macabrefix.boss_armor.gomoria": "Full set required: +20 Max Health, +3.5 Block Reach, and +3.0 Entity Reach.",
+  "tooltip.macabrefix.boss_armor.valamon": "Full set required: +20 Max Health, +4.0 Attack Speed, and +2.0 Attack Knockback",
+  "tooltip.macabrefix.boss_armor.gargamaw": "Full set required: +40 Max Health and +200% Knockback Resistance.",
+  "tooltip.macabrefix.boss_armor.morphegor": "Full set required: +11.0 Attack Damage and +600% Swim Speed."
+}

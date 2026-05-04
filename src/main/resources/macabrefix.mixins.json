@@ -4,6 +4,7 @@
   "package": "com.doug.macabrefix.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "MacabreArmorDurabilityMixin",
     "MacabreArmorSyncProcedureMixin",
     "MacabreAttributeProcedureMixin",
     "MacabreBossRandomSyncProcedureMixin",
@@ -13,6 +14,7 @@
     "MacabreEffectSyncProcedureMixin",
     "MacabreHollowRandomSyncProcedureMixin",
     "MacabrePitEffectProcedureMixin",
+    "MacabrePotionDeadPlayerMixin",
     "MacabreStructureTriggerMixin"
   ],
   "injectors": {
