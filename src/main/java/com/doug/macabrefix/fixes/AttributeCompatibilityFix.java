@@ -97,8 +97,9 @@ public final class AttributeCompatibilityFix {
                     variables -> variables != null && variables.morphegorArmor ? 11.0D : 0.0D)
     };
 
-    private static final Map<PlayerKey, double[]> BASE_VALUES = new HashMap<>();
-    private static final Set<PlayerKey> SOURCE_BLOCKED_PLAYERS = new HashSet<>();
+    // hashmap is fast but it's not thread safe
+    private static final Map<PlayerKey, double[]> BASE_VALUES = new java.util.concurrent.ConcurrentHashMap<>();
+    private static final Set<PlayerKey> SOURCE_BLOCKED_PLAYERS = java.util.concurrent.ConcurrentHashMap.newKeySet();
 
     private AttributeCompatibilityFix() {
     }
